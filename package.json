@@ -1,0 +1,26 @@
+{
+    "name": "http-api-assignment-ii",
+    "version": "1.0.0",
+    "description": "",
+    "main": "./src/server.j",
+    "scripts": {
+        "start": "node ./src/server.js",
+        "pretest": "eslint ./src --fix",
+        "test": "echo \"No test written\" && exit 0"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/lampitosgames/http-api-assignment-ii.git"
+    },
+    "author": "Daniel Timko",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/lampitosgames/http-api-assignment-ii/issues"
+    },
+    "homepage": "https://github.com/lampitosgames/http-api-assignment-ii#readme",
+    "devDependencies": {
+        "eslint": "^5.13.0",
+        "eslint-config-airbnb": "^17.1.0",
+        "eslint-plugin-import": "^2.16.0"
+    }
+}
