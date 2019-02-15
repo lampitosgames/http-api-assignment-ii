@@ -9,33 +9,33 @@ const onRequest = (req, res) => {
     // Route selection for get/head requests
     if (method === 'GET' || method === 'HEAD') {
       switch (url) {
-        case '/':
-          getIndex(req, res);
-          break;
-        case '/style.css':
-          getCSS(req, res);
-          break;
-        case '/getUsers':
-          getUsers(req, res);
-          break;
-        default:
-          sendError(req, res, 404, 'notFound', 'The page/resource you are looking for cannot be found');
-          break;
+      case '/':
+        getIndex(req, res);
+        break;
+      case '/style.css':
+        getCSS(req, res);
+        break;
+      case '/getUsers':
+        getUsers(req, res);
+        break;
+      default:
+        sendError(req, res, 404, 'notFound', 'The page/resource you are looking for cannot be found');
+        break;
       }
     } else if (method === 'POST') {
       // Parse body of request
       body = parse(Buffer.concat(body).toString());
       switch (url) {
-        case '/addUser':
-          if (body.age === '' || body.name === '') {
-            sendError(req, res, 400, 'missingParams', 'Name and age are both required.');
-            return;
-          }
-          addUser(req, res, body);
-          break;
-        default:
-          sendError(req, res, 404, 'notFound', 'POST API endpoint not found');
-          break;
+      case '/addUser':
+        if (body.age === '' || body.name === '') {
+          sendError(req, res, 400, 'missingParams', 'Name and age are both required.');
+          return;
+        }
+        addUser(req, res, body);
+        break;
+      default:
+        sendError(req, res, 404, 'notFound', 'POST API endpoint not found');
+        break;
       }
     }
   });

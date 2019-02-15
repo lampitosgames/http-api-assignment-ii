@@ -1,37 +1,83 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <title>Our simple HTTP server</title>
-  <link rel="stylesheet" type="text/css" href="/style.css">
-  
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.min.js"></script>
-  <script type="text/babel">
+  <head>
+    <title>Our simple HTTP server</title>
+    <link rel="stylesheet" type="text/css" href="/style.css">
 
-  </script>
-</head>
-<body>
-  <section id="top">
-    <h3>POST Status Code Tests</h3>
-    <form id="nameForm" action="/addUser" method="post">
-      <label for="name">Name: </label>
-      <input id="nameField" type="text" name="name" />
-      <label for="age">Age: </label>
-      <input id="ageField" type="number" name="age" min="0" max="100" step="1"/>
-      <input type="submit" value="Add User" />
-    </form>
-    <form id="userForm" action="/getUsers" method="get">
-      <select id='urlField'>
-        <option value='/getUsers'>/getUsers</option>
-        <option value='/notReal'>/notReal</option>
-      </select>
-      <select id="methodSelect">
-        <option value="get">GET</option>
-        <option value="head">HEAD</option>
-      </select>
-      <input type="submit" value="Get User" />
-    </form>
-  </section>
-  <section id="content">
-  </section>
-</body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.min.js"></script>
+    <script type="text/babel">
+      //User form
+      let $nameField = document.getElementById("nameField");
+      let $ageField = document.getElementById("ageField");
+      document.getElementById('nameForm').onsubmit = (e) => {
+        e.preventDefault();
+        let xhr = new XMLHttpRequest();
+        xhr.open("post", "/addUser");
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        xhr.onload = () => {
+          let response = {message: ""};
+          if (xhr.responseText) {
+            response = JSON.parse(xhr.responseText);
+            console.dir(response);
+          }
+          if (xhr.status === 201) {
+            document.getElementById("content").innerHTML = `<h1>Create</h1><p>Message: ${response["message"]}</p>`;
+          } else if (xhr.status === 204) {
+            document.getElementById("content").innerHTML = `<h1>Updated (No Content)</h1>`;
+          } else if (xhr.status === 400) {
+            document.getElementById("content").innerHTML = `<h1>Bad Request</h1><p>Message: ${response["message"]}</p>`;
+          }
+        }
+        xhr.send(encodeURI('name=' + $nameField.value + "&age=" + $ageField.value));
+      };
+      //Name form
+      let $urlField = document.getElementById("urlField");
+      let $methodSelect = document.getElementById("methodSelect");
+      document.getElementById('userForm').onsubmit = (e) => {
+        e.preventDefault();
+        let xhr = new XMLHttpRequest();
+        xhr.open($methodSelect.value, $urlField.value);
+        xhr.onload = () => {
+          let response = {message: ""};
+          if (xhr.responseText) {
+            response = JSON.parse(xhr.responseText);
+            console.dir(response);
+          }
+          if (xhr.status === 200) {
+            document.getElementById("content").innerHTML = `<h1>Success</h1><p>${xhr.responseText}</p>`;
+          } else {
+            if (xhr.status === 404) {
+              document.getElementById("content").innerHTML = `<h1>Resource Not Found</h1><p>Message: ${response["message"]}</p>`;
+            }
+          }
+        }
+        xhr.send();
+      };
+    </script>
+  </head>
+  <body>
+    <section id="top">
+      <h3>POST Status Code Tests</h3>
+      <form id="nameForm" action="/addUser" method="post">
+        <label for="name">Name: </label>
+        <input id="nameField" type="text" name="name" />
+        <label for="age">Age: </label>
+        <input id="ageField" type="number" name="age" min="0" max="100" step="1" />
+        <input type="submit" value="Add User" />
+      </form>
+      <form id="userForm" action="/getUsers" method="get">
+        <select id='urlField'>
+          <option value='/getUsers'>/getUsers</option>
+          <option value='/notReal'>/notReal</option>
+        </select>
+        <select id="methodSelect">
+          <option value="get">GET</option>
+          <option value="head">HEAD</option>
+        </select>
+        <input type="submit" value="Get User" />
+      </form>
+    </section>
+    <section id="content">
+    </section>
+  </body>
 </html>
